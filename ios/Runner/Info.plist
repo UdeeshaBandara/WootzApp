@@ -24,10 +24,11 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>wootzapp</string>
+			<string>com.wootzapp.browser</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wootzapp</string>
+				<string>http</string>
+				<string>https</string>
 			</array>
 		</dict>
 	</array>
@@ -56,26 +57,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <true/>
-    </dict>
-    <key>CFBundleURLTypes</key>
-     <array>
-       <dict>
-         <key>CFBundleTypeRole</key>
-         <string>Editor</string>
-         <key>CFBundleURLName</key>
-         <string>*</string>
-         <key>CFBundleURLSchemes</key>
-         <array>
-           <string>http</string>
-           <string>https</string>
-         </array>
-       </dict>
-     </array>
-     <key>io.flutter.embedded_views_preview</key>
-     <string>YES</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

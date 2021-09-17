@@ -101,151 +101,158 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              color: const Color.fromARGB(255, 204, 204, 255),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(children: [
-                  Expanded(
-                      child: FutureBuilder<WebViewController>(
-                    future: _webViewController.future,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<WebViewController> snapshot) {
-                      final bool webViewReady =
-                          snapshot.connectionState == ConnectionState.done;
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                color: const Color.fromARGB(255, 204, 204, 255),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(children: [
+                    Expanded(
+                        child: FutureBuilder<WebViewController>(
+                      future: _webViewController.future,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<WebViewController> snapshot) {
+                        final bool webViewReady =
+                            snapshot.connectionState == ConnectionState.done;
 
-                      if (snapshot.hasData) {
-                        final WebViewController controller = snapshot.data!;
-                        return Row(
-                          children: <Widget>[
-                            IconButton(
-                              icon: const Icon(Iconsax.previous1),
-                              onPressed: !webViewReady
-                                  ? null
-                                  : () async {
-                                      if (await controller.canGoBack()) {
-                                        await controller.goBack();
-                                      } else {
-                                        // ignore: deprecated_member_use
-                                        Scaffold.of(context).showSnackBar(
-                                          const SnackBar(
-                                              content: Text("No history")),
-                                        );
-                                        return;
-                                      }
-                                    },
-                            ),
-                            IconButton(
-                              icon: const Icon(Iconsax.next1),
-                              onPressed: !webViewReady
-                                  ? null
-                                  : () async {
-                                      if (await controller.canGoForward()) {
-                                        await controller.goForward();
-                                      } else {
-                                        // ignore: deprecated_member_use
-                                        Scaffold.of(context).showSnackBar(
-                                          const SnackBar(
-                                              content:
-                                                  Text("No forward history")),
-                                        );
-                                        return;
-                                      }
-                                    },
-                            ),
-                            IconButton(
-                              icon: const Icon(Iconsax.refresh),
-                              onPressed: !webViewReady
-                                  ? null
-                                  : () {
-                                      controller.reload();
-                                    },
-                            ),
-                            Expanded(
-                              child: SizedBox(
-                                height: 40,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: TextField(
-                                    textInputAction: TextInputAction.search,
-                                    onTap: () => urlController.selection =
-                                        TextSelection(
-                                            baseOffset: 0,
-                                            extentOffset: urlController
-                                                .value.text.length),
-                                    controller: urlController,
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                      border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
+                        if (snapshot.hasData) {
+                          final WebViewController controller = snapshot.data!;
+                          return Row(
+                            children: <Widget>[
+                              IconButton(
+                                icon: const Icon(Iconsax.previous1),
+                                onPressed: !webViewReady
+                                    ? null
+                                    : () async {
+                                        if (await controller.canGoBack()) {
+                                          await controller.goBack();
+                                        } else {
+                                          // ignore: deprecated_member_use
+                                          Scaffold.of(context).showSnackBar(
+                                            const SnackBar(
+                                                content: Text("No history")),
+                                          );
+                                          return;
+                                        }
+                                      },
+                              ),
+                              IconButton(
+                                icon: const Icon(Iconsax.next1),
+                                onPressed: !webViewReady
+                                    ? null
+                                    : () async {
+                                        if (await controller.canGoForward()) {
+                                          await controller.goForward();
+                                        } else {
+                                          // ignore: deprecated_member_use
+                                          Scaffold.of(context).showSnackBar(
+                                            const SnackBar(
+                                                content:
+                                                    Text("No forward history")),
+                                          );
+                                          return;
+                                        }
+                                      },
+                              ),
+                              IconButton(
+                                icon: const Icon(Iconsax.refresh),
+                                onPressed: !webViewReady
+                                    ? null
+                                    : () {
+                                        controller.reload();
+                                      },
+                              ),
+                              Expanded(
+                                child: SizedBox(
+                                  height: 40,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: TextField(
+                                      textInputAction: TextInputAction.search,
+                                      onTap: () => urlController.selection =
+                                          TextSelection(
+                                              baseOffset: 0,
+                                              extentOffset: urlController
+                                                  .value.text.length),
+                                      controller: urlController,
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                        ),
                                       ),
+                                      onSubmitted: (value) {
+                                        if (Uri.parse(urlController.text)
+                                            .isAbsolute) {
+                                          controller
+                                              .loadUrl(urlController.text);
+                                        } else {
+                                          controller.loadUrl(("https://" +
+                                              urlController.text));
+                                        }
+                                      },
                                     ),
-                                    onSubmitted: (value) {
-                                      if (Uri.parse(urlController.text)
-                                          .isAbsolute) {
-                                        controller.loadUrl(urlController.text);
-                                      } else {
-                                        controller.loadUrl(
-                                            ("https://" + urlController.text));
-                                      }
-                                    },
                                   ),
                                 ),
-                              ),
-                            )
-                          ],
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  )),
-                ]),
+                              )
+                            ],
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )),
+                  ]),
+                ),
               ),
-            ),
-            Expanded(
-              child: IndexedStack(
-                index: indexPosition,
-                children: [
-                  WebView(
-                    debuggingEnabled: true,
-                    javascriptMode: JavascriptMode.unrestricted,
-                    onWebViewCreated: (WebViewController webViewController) {
-                      _webViewController.complete(webViewController);
-                    },
-                    initialUrl: urlTo,
-                    onPageStarted: beginLoading,
-                    onPageFinished: (String url) async {
-                      WebViewController webViewController =
-                          await _webViewController.future;
-                      String js =
-                          await rootBundle.loadString("assets/trust.js");
+              Expanded(
+                child: IndexedStack(
+                  index: indexPosition,
+                  children: [
+                    WebView(
+                      debuggingEnabled: true,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      onWebViewCreated: (WebViewController webViewController) {
+                        _webViewController.complete(webViewController);
+                      },
+                      initialUrl: urlTo,
+                      onPageStarted: beginLoading,
+                      onPageFinished: (String url) async {
+                        WebViewController webViewController =
+                            await _webViewController.future;
+                        String init =
+                            await rootBundle.loadString("assets/init.js");
+                        String trust =
+                            await rootBundle.loadString("assets/trust.js");
 
-                      await webViewController.evaluateJavascript(js);
+                        // await webViewController.evaluateJavascript(init);
+                        // await webViewController.evaluateJavascript(trust);
 
-                      setState(() {
-                        indexPosition = 0;
-                      });
-                    },
-                    onWebResourceError: (WebResourceError error) async {
-                      loadHtmlFromAssets('assets/error_page.html',
-                          await _webViewController.future);
-                    },
-                  ),
-                  Container(
-                    color: Colors.white,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                ],
+                        setState(() {
+                          indexPosition = 0;
+                        });
+                      },
+                      onWebResourceError: (WebResourceError error) async {
+                        loadHtmlFromAssets('assets/error_page.html',
+                            await _webViewController.future);
+                      },
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
